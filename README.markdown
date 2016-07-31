@@ -164,54 +164,103 @@ $parent->prependNode($node);
 
 #### Thêm mới  phía trước  or phía sau một giao điểm nút chỉ định
 
-You can make `$node` to be a neighbor of the `$neighbor` node using following methods:
+Bạn có thể làm cho các giao điểm nút `$node` là một giao điểm cùng cấp hàng xóm `$neighbor` của nút giao điểm hiện có bằng các phương pháp:
 
-*`$neighbor` must exists, target node can be fresh. If target node exists, 
-it will be moved to the new position and parent will be changed if it's required.*
+*`$neighbor` phải tồn tại, nút giao điểm ``$node`` phải là mới. nếu nút ``$node`` tồn tại , 
+nó sẽ được di chuyển đến vị trí mới  và parent của nó sẽ được thay đổi nếu nó yêu cầu.*
 
 ```php
-# Explicit save
+
+$neighbor = Category::find(13);
+$attributes = [
+	    'name' => 'Thit heo Tây',
+
+	    'children' => [
+	        [
+	            'name' => 'Thị Heo Tây Nuôi Nhà',
+
+	         ],
+	      ],
+	   ];
+	   // tạo nút mới 
+$node = Category::create($attributes);
+// gọi function để di chuyển nút là hàng xóm hoặc thay đổi vị trí parent nếu được yêu cầu
+
+# rõ ràng  save
 $node->afterNode($neighbor)->save();
 $node->beforeNode($neighbor)->save();
 
-# Implicit save
+# ngầm định  save
 $node->insertAfterNode($neighbor);
 $node->insertBeforeNode($neighbor);
 ```
 
-#### Building a tree from array
+#### Xây dựng một cây cấu trúc lồng nhau từ mảng
 
-When using static method `create` on node, it checks whether attributes contains
-`children` key. If it does, it creates more nodes recursively.
+khi nào sử dụng các method static `create` trong các giao điểm, nó sẽ kiểm tra xem các attributes chứa
+`children` key. Nếu nó có nó tạo ra nhiều hơn các nút đệ quy.
 
 ```php
-$node = Category::create([
-    'name' => 'Foo',
-    
-    'children' => [
-        [
-            'name' => 'Bar',
-            
-            'children' => [
-                [ 'name' => 'Baz' ],
-            ],
-        ],
-    ],
-]);
+$node = Category::create(
+			['name' => 'Food',
+
+			    'children' => [
+			        [
+			            'name' => 'Fruid',
+
+			            'children' => [
+			                [ 
+			                	'name' => 'Red',
+			                  	'children' => [
+			                  		['name'=>'Cherry'],
+			                  		['name'=>'Torry'],
+			                  	]
+			                 ],
+			              
+			            ],
+			        ],
+			        [
+			            'name' => 'Meat',
+
+			            'children' => 
+			           		 [
+				                [ 'name' => 'Beef',
+				                		'children' =>
+				                		[
+						                	 ['name'=>'Cherry'],
+						                	 ['name'=>'Torry'],
+					                	],
+				                ],
+				                [ 'name' => 'Pork',
+				                		'children' =>
+				                			[
+							                	 ['name'=>'Niten'],
+							                	 ['name'=>'Forry']
+				                			 ]
+
+				                 ],
+			           		 ],
+			        ],
+
+			    ],
+		 
+			]
+		);
+
+
 ```
 
-`$node->children` now contains a list of created child nodes.
+`$node->children` bây giờ chứa một danh sách các nút giao điểm con child đươc tạo ra.
 
-#### Rebuilding a tree from array
+#### Xây dựng lại cây cấu trúc  từ 1 mảng
 
-You can easily rebuild a tree. This is useful for mass-changing the structure of
-the tree.
+Bạn có thể dễ dàng xây dựng lại một cây. Điều này rất hữu ích cho hàng loạt thay đổi cơ cấu 
 
 ```php
 Category::rebuildTree($data, $delete);
 ```
 
-`$data` is an array of nodes:
+`$data` là một mảng của các nút :
 
 ```php
 $data = [
@@ -220,53 +269,54 @@ $data = [
 ];
 ```
 
-There is an id specified for node with the name of `foo` which means that existing
-node will be filled and saved. If node is not exists `ModelNotFoundException` is
-thrown. Also, this node has `children` specified which is also an array of nodes;
-they will be processed in the same manner and saved as children of node `foo`.
+Có một id được chỉ định cho nút với tên của `foo` có nghĩa là hiện tại
+nút sẽ được  filled and saved. nếu nút không tồn tại một lỗi được trả về `ModelNotFoundException`. Cũng như thế,
+Nếu nút có  `children` quy định đó cũng là một mảng của các nút giao điểm;
 
-Node `bar` has no primary key specified, so it will be created.
+họ sẽ được xử lý trong theo cách tương tự và  Lưu giống như children của nút giao điểm  `foo`.
 
-`$delete` shows whether to delete nodes that are already exists but not present
-in `$data`. By default, nodes aren't deleted.
+Nút giao điểm `bar` không có khóa chính primary key , 
+do đó, nó sẽ được tạo ra.
 
-### Retrieving nodes
+`$delete` cho thấy cho dù để xóa các nút mà đã tồn tại nhưng không có mặt trong `$data`.
+Theo mặc định, nút không bị xóa.
 
-*In some cases we will use an `$id` variable which is an id of the target node.*
+### Tìm lấy ra được  nút giao điểm "nodes"
 
-#### Ancestors
+*Trong một số trường hợp, chúng tôi sẽ sử dụng một biến `$id` mà là id của nút mục tiêu.*
 
-Ancestors make a chain of parents to the node. Helpful for displaying breadcrumbs
-to the current category.
+#### Lấy ra nút tổ tiên
+
+Một chuỗi từ tổ tiến đến parents đến nút hiện tại sẽ được trả về phù hợp để thực hiện hiển thị 
+ breadcrumbs category hiện tại.
 
 ```php
-// #1 Using accessor
+// #1 Sử dụng truy cập
 $result = $node->getAncestors();
 
-// #2 Using a query 
+// #2 Sử dụng một query
 $result = $node->ancestors()->get();
 
-// #3 Getting ancestors by primary key
+// #3 Sử dụng truy cập từ 1 khóa chính
 $result = Category::ancestorsOf($id);
 ```
 
-#### Descendants
+#### Lấy ra nút giao điểm là con cháu
 
-Descendants are all nodes in a sub tree, i.e. children of node, children of
-children, etc.
+Con cháu là tất cả các  nút giao điểm trong một nhánh của cây có _lft và _rgt là một khoảng trống vị trí.  Nghĩa là lấy ra các con của nút hoặc cháu hoặc tất cả ... v.v tùy vào khoảng trống cụ thể giữa column của  nút giao điểm _lft và _rgt trong table
 
 ```php
-// #1 Using relationship
+// #1 Using mối liên hệ
 $result = $node->descendants;
 
-// #2 Using a query
+// #2 Using một query
 $result = $node->descendants()->get();
 
-// #3 Getting descendants by primary key
+// #3 lấy ra con cháu  descendants sử dụng khóa chính
 $result = Category::descendantsOf($id);
 ```
 
-Descendants can be eagerly loaded:
+Lấy ra con cháu hay hậu duệ của các giao điểm có id là một trong các số trong ảng id list nếu các id đó có cột _lft và _rgt có khoảng trống là hậu duệ sẽ được lấy ra :
 
 ```php
 $nodes = Category::with('descendants')->whereIn('id', $idList)->get();
