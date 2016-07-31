@@ -4,15 +4,16 @@
 [![Latest Unstable Version](https://poser.pugx.org/kalnoy/nestedset/v/unstable.svg)](https://packagist.org/packages/kalnoy/nestedset)
 [![License](https://poser.pugx.org/kalnoy/nestedset/license.svg)](https://packagist.org/packages/kalnoy/nestedset)
 
-This is a Laravel 4-5 package for working with trees in relational databases.
 
-*   **Laravel 5.2** is supported since v4
-*   **Laravel 5.1** is supported in v3
-*   **Laravel 4** is supported in v2
+Đây là một gói thư viện làm việc với Laravel 4-5 để làm việc với cây trong cơ sở dữ liệu quan hệ
+
+*   **Laravel 5.2** sử dụng  v4
+*   **Laravel 5.1** sử dụng v3
+*   **Laravel 4** sử dụng v2
 
 
 
-- [Theory](#what-are-nested-sets)
+- [Lý thuyết](#what-are-nested-sets)
 - [Tài liệu ](#documentation)
     -   [Thêm mới giao điểm ](#inserting-nodes)
     -   [lấy nút giao điểm ](#retrieving-nodes)
