@@ -10,28 +10,23 @@ This is a Laravel 4-5 package for working with trees in relational databases.
 *   **Laravel 5.1** is supported in v3
 *   **Laravel 4** is supported in v2
 
-Although this project is completely free for use, I appreciate any support!
 
--   __[Donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5TJUM7FYU5VR2)__
--   My Visa: 4276 0700 1073 4244
-
-__Contents:__
 
 - [Theory](#what-are-nested-sets)
-- [Documentation](#documentation)
-    -   [Inserting nodes](#inserting-nodes)
-    -   [Retrieving nodes](#retrieving-nodes)
-    -   [Deleting nodes](#deleting-nodes)
-    -   [Consistency checking & fixing](#checking-consistency)
-    -   [Scoping](#scoping)
-- [Requirements](#requirements)
-- [Installation](#installation)
+- [Tài liệu ](#documentation)
+    -   [Thêm mới giao điểm ](#inserting-nodes)
+    -   [lấy nút giao điểm ](#retrieving-nodes)
+    -   [xóa nút giao điểm](#deleting-nodes)
+    -   [Tính nhất quán kiểm tra  & sửa chữa](#checking-consistency)
+    -   [Phạm vi ](#scoping)
+- [Yêu cầu](#requirements)
+- [Cài đặt](#installation)
 
-What are nested sets?
+Cấu trúc cây lồng nhau là gì nested sets?
 ---------------------
 
-Nested sets or [Nested Set Model](http://en.wikipedia.org/wiki/Nested_set_model) is
-a way to effectively store hierarchical data in a relational table. From wikipedia:
+Nested sets hoặc  [Nested Set Model](http://en.wikipedia.org/wiki/Nested_set_model) 
+một cách để lưu trữ hiệu quả phân cấp dữ liệu trong một bảng quan hệ. 
 
 > The nested set model is to number the nodes according to a tree traversal,
 > which visits each node twice, assigning numbers in the order of visiting, and
@@ -41,36 +36,34 @@ a way to effectively store hierarchical data in a relational table. From wikiped
 
 ### Applications
 
-NSM shows good performance when tree is updated rarely. It is tuned to be fast for
-getting related nodes. It'is ideally suited for building multi-depth menu or 
-categories for shop.
+NSM cho thấy hiệu suất khi cây được update ít. Nó được tạo ra làm nhanh chóng có được các giao điểm nút liên quan. Nó phù hợp xây dựng cho menu  " building multi-depth menu " hoặc categories của shop. 
 
-Documentation
+
+Tài liệu 
 -------------
 
-Suppose that we have a model `Category`; a `$node` variable is an instance of that model
-and the node that we are manipulating. It can be a fresh model or one from database.
+Giả sử chúng ta có một mô hình model `Category`; và một `$node` biến là một  một thể hiện của class mô hình model
+và các giao điểm mà chúng ta tương tác . Nó có thể là một mô hình mới hoặc một from database.  
 
-### Relationships
+### Mối quan hê trong cấu trúc cây 
 
-Node has following relationships that are fully functional and can be eagerly loaded:
+Node giao điểm có mối quan hệ đẩy đủ chức năng với các function và và cấu trúc tự động nạp.
 
--   Node belongs to `parent`
--   Node has many `children`
--   Node has many `descendants`
+-   Node belongs to `parent` => nút giao điểm thuộc về một giao điểm cha
+-   Node has many `children` => nút giao điểm có nhiều giao điểm con
+-   Node has many `descendants` => giao điểm có nhiều giao điểm cháu
 
-### Inserting nodes
+### Thêm một nút giao điểm
 
-Moving and inserting nodes includes several database queries, so __transaction is
-automatically started__ when node is saved. It is safe to use global transaction 
-if you work with several models.
+Di chuyển hay thêm mới một nút bao gồm truy vấn tới cơ sở dữ liệu. Thực thi được tự đông khi nào các nút giao điểm được lưu.  Nó là an toàn sử dụng thực thi toàn cầu. 
 
-Another important note is that __structural manipulations are deferred__ until you
-hit `save` on model (some methods implicitly call `save` and return boolean result
-of the operation).
+Nếu bạn làm việc với một số Models
 
-If model is successfully saved it doesn't mean that node was moved. If your application
-depends on whether the node has actually changed its position, use `hasMoved` method:
+Lưu ý quan trọng :  __Điều khiển cấu trúc cây bị trì hoãn__ cho đến khi bạn 
+ `save` trong model (một số phương pháp ngầm `save` and trả về  boolean result).
+
+Nếu mô hình được saved nó không có nghĩa các nút giao điểm được di chuyển. Nếu ứng dụng của bạn
+phụ thuộc vào việc các nút thực sự đã được thay đổi vị trí sắp xếp của nó , sử dụng `hasMoved` method:
 
 ```php
 if ($node->save()) {
@@ -78,9 +71,9 @@ if ($node->save()) {
 }
 ```
 
-#### Creating nodes
+#### Tạo ra một nút giao điểm "nodes"
 
-When you simply creating a node, it will be appended to the end of the tree:
+Khi bạn chỉ đơn giản là tạo ra một nút giao điểm mới, nó sẽ được thêm vào cuối cây của cấu trúc:
 
 ```php
 Category::create($attributes); // Saved as root
@@ -91,9 +84,9 @@ $node = new Category($attributes);
 $node->save(); // Saved as root
 ```
 
-In this case the node is considered a _root_ which means that it doesn't have a parent.
+Trong các trường hợp này các nút là một nút giao điểm  _root_  cấp cao nhât không có giao điểm cha.
 
-#### Making a root from existing node
+#### Thay đổi một nút root giao điểm gốc từ nút hiện có 
 
 ```php
 // #1 Implicit save
@@ -103,27 +96,52 @@ $node->saveAsRoot();
 $node->makeRoot()->save();
 ```
 
-The node will be appended to the end of the tree.
+Các nút sẽ tạo ra cấu trúc cây mới được thêm vào cuối cây hiện tại cùng cấp các nút root đã có.
 
-#### Appending and prepending to the specified parent
+#### Nối thêm vào  and thêm vào trước đến các giao điểm đã xác định  parent
 
-If you want to make node a child of other node, you can make it last or first child.
+Nếu bạn muốn làm cho nút hiện tại là giao điểm nút con của một nút khác. Bạn có thể cho nó là cuối cùng hoặc đầu tiên. "last or first child".
 
-*In following examples, `$parent` is some existing node.*
+*Áp dụng trong ví dụ này, `$parent` là một nút hiện có.*
 
-There are few ways to append a node:
+`$parent = find($id) return object $nodes parent`
+
+Có vài cách để nối thêm một giao điểm vào cuối :
 
 ```php
-// #1 Using deferred insert
+// #1 Sử dụng một định nghĩa insert
 $node->appendToNode($parent)->save();
 
-// #2 Using parent node
+ví dụ :
+$parent = Category::find(10);
+$attributes = [
+    'name' => 'Màu Sắc',
+
+    'children' => [
+        [
+            'name' => 'Đỏ',
+
+            'children' => [
+                [ 'name' => 'Đỏ Đậm' ],
+            ],
+         ],
+      ],
+   ];
+
+$node = Category::create($attributes);
+$node->appendToNode($parent)->save();
+
+// #2  Sử dụng giao điểm là object parent thêm mới một giao điểm con
 $parent->appendNode($node);
 
-// #3 Using parent's children relationship
+ví dụ :
+thay thế function $node->appendToNode($parent)->save() bằng $parent->appendNode($node);
+
+
+// #3 Sử dụng một mối quan hệ giữa nút parent và các con sau đó tạo mới một giao điểm vào cuối cùng
 $parent->children()->create($attributes);
 
-// #5 Using node's parent relationship
+// #5 Sử dụng một giao điểm parent mối quan hệ 
 $node->parent()->associate($parent)->save();
 
 // #6 Using the parent attribute
@@ -134,7 +152,7 @@ $node->save();
 Category::create($attributes, $parent);
 ```
 
-And only a couple ways to prepend:
+Chỉ có một vài cách để thêm vào trước đầu tiên của các nút cùng cấp thay vì nối thêm vào ở cuối cùng:
 
 ```php
 // #1
@@ -144,7 +162,7 @@ $node->prependToNode($parent)->save();
 $parent->prependNode($node);
 ```
 
-#### Inserting before or after specified node
+#### Thêm mới  phía trước  or phía sau một giao điểm nút chỉ định
 
 You can make `$node` to be a neighbor of the `$neighbor` node using following methods:
 
