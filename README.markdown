@@ -317,15 +317,17 @@ $result = $node->descendants()->get();
 $result = Category::descendantsOf($id);
 ```
 
-Lấy ra con cháu hay hậu duệ của các giao điểm có id là một trong các số trong ảng id list nếu các id đó có cột _lft và _rgt có khoảng trống là hậu duệ sẽ được lấy ra :
+Lấy ra con cháu hay hậu duệ của các giao điểm có id là một trong các số trong mảng id list nếu các id đó có cột _lft và _rgt có khoảng trống là hậu duệ sẽ được lấy ra :
 
 ```php
 $nodes = Category::with('descendants')->whereIn('id', $idList)->get();
 ```
 
-#### Siblings
+#### Anh em cùng một parent giao điểm nút
 
-Siblings are nodes that have same parent.
+Anh chị em là các giao điểm có cùng Parent.
+
+ví dụ parent có _lft là 13 và _rgt là 18 vậy các khoảng trong 13 và 18 có 2 nút cùng cấp mang giá trị 2 column là 14-15 và 16-17 sẽ ;à ạ e cùng parent giao điểm cha nút.
 
 ```php
 $result = $node->getSiblings();
@@ -333,51 +335,57 @@ $result = $node->getSiblings();
 $result = $node->siblings()->get();
 ```
 
-To get only next siblings:
+Để có được anh em phía sau cùng cấp của giao điểm hiện tại :
+
+ví dụ _lft = 15 vậy sau 15 là 16 ...... với điều kiện cùng thuộc parent giao điểm. 
 
 ```php
-// Get a sibling that is immediately after the node
+$node = Model::find(15);
+// lấy được một anh em được thêm vào sau node hiện có return 16
 $result = $node->getNextSibling();
 
-// Get all siblings that are after the node 
+
+// lấy tất cả ae được thêm vào sau 16-> ... v.v.. <= nhỏ hơn parent _rgt
 $result = $node->getNextSiblings();
 
-// Get all siblings using a query
+// lấy tất cả thêm vào sau sử dụng query
 $result = $node->nextSiblings()->get();
 ```
 
-To get previous siblings:
+Để có được anh chị em giao điểm nút thêm vào trước :
 
 ```php
-// Get a sibling that is immediately before the node
+// Lấy một người anh em của nút được thêm và trước giao điểm hiện tại
+
 $result = $node->getPrevSibling();
 
-// Get all siblings that are before the node 
+// lấy tất cả các nút được thêm vào trước nút hiện tại 
+
 $result = $node->getPrevSiblings();
 
-// Get all siblings using a query
+// Lấy tất cả  nút cuối cùng được thêm vào trước object hiện tại  bằng query xem right để biết giao điểm trước cùng cấp
 $result = $node->prevSiblings()->get();
 ```
 
-#### Getting related models from other table
+#### Bắt mô hình liên quan từ bảng khác
 
-Imagine that each category `has many` goods. I.e. `HasMany` relationship is established.
-How can you get all goods of `$category` and every its descendant? Easy!
+Hãy tưởng tượng một category `has many` có nhiều goods. I.e. `HasMany` mối quan hệ được thiết lập.
+Làm thế nào bạn có thể nhận được tất cả  get all goods của `$category` và mỗi hậu duệ của nó ?
 
 ```php
-// Get ids of descendants
+// Nhận id của con cháu 
 $categories = $category->descendants()->lists('id');
 
-// Include the id of category itself
+// Bao gồm các id của category chính no
 $categories[] = $category->getKey();
 
-// Get goods
+// Nhận hàng goods
 $goods = Goods::whereIn('category_id', $categories)->get();
 ```
 
-#### Including node depth
+#### Bao gồm cả chiều sâu nút level cấp độ nhánh - độ sâu nhánh hiện tại
 
-If you need to know at which level the node is:
+Nếu bạn cần biết level các giao điểm nút với nút id là :
 
 ```php
 $result = Category::withDepth()->find($id);
@@ -385,15 +393,15 @@ $result = Category::withDepth()->find($id);
 $depth = $result->depth;
 ```
 
-Root node will be at level 0. Children of root nodes will have a level of 1, etc.
+Root  nút sẽ ở  level 0. Children của nút root sẽ có level 1, 
 
-To get nodes of specified level, you can apply `having` constraint:
+Để có được các name giao điểm nút trong cấp level cụ thể, bạn có thể áp dụng  `having` hạn chế :
 
 ```php
 $result = Category::withDepth()->having('depth', '=', 1)->get();
 ```
 
-#### Default order
+#### Mặc định sắp xếp
 
 Each node has it's own unique `_lft` value that determines its position in the tree. If
 you want node to be ordered by this value, you can use `defaultOrder` method on
