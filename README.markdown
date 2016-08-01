@@ -16,7 +16,7 @@
 - [Lý thuyết](#Nested-Sets-CẤU-TRÚC-PHÂN-CẤP-DẠNG-CÂY-LÀ-GÌ)
 - [Yêu cầu](#YÊU-CẦU)
 - [Cài đặt](#CÀI-ĐĂT)
-- [Tài liệu ](#documentation)
+- [Tài liệu ](#tài-liệu)
     -   [THÊM NÚT ](#inserting-nodes)
     -   [LẤY NÚT ](#retrieving-nodes)
     -   [XÓA NÚT](#deleting-nodes)
@@ -38,7 +38,7 @@ một cách để lưu trữ hiệu quả phân cấp dữ liệu trong một b�
 NSM cho thấy hiệu suất khi cây được update ít. Nó được tạo ra làm nhanh chóng có được các giao điểm nút liên quan. Nó phù hợp xây dựng cho menu  " building multi-depth menu " hoặc categories của shop. 
 
 
-Tài liệu 
+Tài liệu
 -------------
 
 Giả sử chúng ta có một mô hình model `Category`; và một `$node` biến là một  một thể hiện của class mô hình model
@@ -52,7 +52,7 @@ Node giao điểm có mối quan hệ đẩy đủ chức năng với các funct
 -   Node has many `children` => nút giao điểm có nhiều giao điểm con
 -   Node has many `descendants` => giao điểm có nhiều giao điểm cháu
 
-### Thêm một nút giao điểm
+### THÊM NÚT
 
 Di chuyển hay thêm mới một nút bao gồm truy vấn tới cơ sở dữ liệu. Thực thi được tự đông khi nào các nút giao điểm được lưu.  Nó là an toàn sử dụng thực thi toàn cầu. 
 
@@ -70,7 +70,7 @@ if ($node->save()) {
 }
 ```
 
-#### Tạo ra một nút giao điểm "nodes"
+####  TẠO NÚT 
 
 Khi bạn chỉ đơn giản là tạo ra một nút giao điểm mới, nó sẽ được thêm vào cuối cây của cấu trúc:
 
@@ -97,7 +97,7 @@ $node->makeRoot()->save();
 
 Các nút sẽ tạo ra cấu trúc cây mới được thêm vào cuối cây hiện tại cùng cấp các nút root đã có.
 
-#### Nối thêm vào  and thêm vào trước đến các giao điểm đã xác định  parent
+#### NỐI THÊM VÀO CUỐI HOẶC THÊM VÀO TRƯỚC NHÁNH HIỆN CÓ
 
 Nếu bạn muốn làm cho nút hiện tại là giao điểm nút con của một nút khác. Bạn có thể cho nó là cuối cùng hoặc đầu tiên. "last or first child".
 
@@ -161,7 +161,7 @@ $node->prependToNode($parent)->save();
 $parent->prependNode($node);
 ```
 
-#### Thêm mới  phía trước  or phía sau một giao điểm nút chỉ định
+####  THÊM MỚI PHÍA TRƯỚC HOẶC SAU MỘT NÚT CHỈ ĐỊNH
 
 Bạn có thể làm cho các giao điểm nút `$node` là một giao điểm cùng cấp hàng xóm `$neighbor` của nút giao điểm hiện có bằng các phương pháp:
 
@@ -194,7 +194,7 @@ $node->insertAfterNode($neighbor);
 $node->insertBeforeNode($neighbor);
 ```
 
-#### Xây dựng một cây cấu trúc lồng nhau từ mảng
+#### XÂY DỰNG CẤU TRÚC PHÂN CẤP LỒNG NHAU TỪ MẢNG
 
 khi nào sử dụng các method static `create` trong các giao điểm, nó sẽ kiểm tra xem các attributes chứa
 `children` key. Nếu nó có nó tạo ra nhiều hơn các nút đệ quy.
@@ -251,7 +251,7 @@ $node = Category::create(
 
 `$node->children` bây giờ chứa một danh sách các nút giao điểm con child đươc tạo ra.
 
-#### Xây dựng lại cây cấu trúc  từ 1 mảng
+#### XÂY DỰNG LẠI MỘT CÂY PHÂN CẤP TỪ MẢNG
 
 Bạn có thể dễ dàng xây dựng lại một cây. Điều này rất hữu ích cho hàng loạt thay đổi cơ cấu 
 
@@ -280,11 +280,11 @@ do đó, nó sẽ được tạo ra.
 `$delete` cho thấy cho dù để xóa các nút mà đã tồn tại nhưng không có mặt trong `$data`.
 Theo mặc định, nút không bị xóa.
 
-### Tìm lấy ra được  nút giao điểm "nodes"
+### LẤY RA NÚT GIAO ĐIỂM
 
 *Trong một số trường hợp, chúng tôi sẽ sử dụng một biến `$id` mà là id của nút mục tiêu.*
 
-#### Lấy ra nút tổ tiên
+#### LẤY RA NÚT TỔ TIÊN ROOT
 
 Một chuỗi từ tổ tiến đến parents đến nút hiện tại sẽ được trả về phù hợp để thực hiện hiển thị 
  breadcrumbs category hiện tại.
@@ -300,7 +300,7 @@ $result = $node->ancestors()->get();
 $result = Category::ancestorsOf($id);
 ```
 
-#### Lấy ra nút giao điểm là con cháu
+#### LẤY RA CÁC NHÁNH CON TRONG PHÂN CẤP
 
 Con cháu là tất cả các  nút giao điểm trong một nhánh của cây có _lft và _rgt là một khoảng trống vị trí.  Nghĩa là lấy ra các con của nút hoặc cháu hoặc tất cả ... v.v tùy vào khoảng trống cụ thể giữa column của  nút giao điểm _lft và _rgt trong table
 
@@ -321,7 +321,7 @@ Lấy ra con cháu hay hậu duệ của các giao điểm có id là một tron
 $nodes = Category::with('descendants')->whereIn('id', $idList)->get();
 ```
 
-#### Anh em cùng một parent giao điểm nút
+#### LẤY RA CÁC NÚT CÙNG CẤP TRONG 1 NHÁNH
 
 Anh chị em là các giao điểm có cùng Parent.
 
@@ -365,7 +365,7 @@ $result = $node->getPrevSiblings();
 $result = $node->prevSiblings()->get();
 ```
 
-#### Bắt mô hình liên quan từ bảng khác
+#### BẮT DỮ LIỆU MODEL TỪ BẢNG KHÁC
 
 Hãy tưởng tượng một category `has many` có nhiều goods. I.e. `HasMany` mối quan hệ được thiết lập.
 Làm thế nào bạn có thể nhận được tất cả  get all goods của `$category` và mỗi hậu duệ của nó ?
@@ -381,7 +381,7 @@ $categories[] = $category->getKey();
 $goods = Goods::whereIn('category_id', $categories)->get();
 ```
 
-#### Bao gồm cả chiều sâu nút level cấp độ nhánh - độ sâu nhánh hiện tại
+#### LẤY LEVEL CHIỀU SÂU  CỦA NÚT HIỆN TẠI TRONG MÔ HÌNH PHÂN CẤP
 
 Nếu bạn cần biết level các giao điểm nút với nút id là :
 
@@ -399,7 +399,7 @@ Root  nút sẽ ở  level 0. Children của nút root sẽ có level 1,
 $result = Category::withDepth()->having('depth', '=', 1)->get();
 ```
 
-#### Mặc định sắp xếp
+#### SẮP XẾP MẶC ĐỊNH CỦA MÔ HÌNH PHÂN CẤP
 
 Mỗi nút giao điểm có giá trị cột `_lft` là duy nhất để xác định vị trí của nó trong cây. Nếu bạn muốn nút giao điểm  được sắp xếp theo các giá trị này, bạn cần sử dụng `defaultOrder` phương pháp trong câu lệnh truy vấn query builder :
 
@@ -414,7 +414,7 @@ Bạn có thể nhận được các nút theo thứ tự đảo ngược lại 
 $result = Category::reversed()->get();
 ```
 
-##### Chuyển một nút theo sắp xếp mặc định
+##### DI CHUYỂN VỊ TRÍ CỦA NÚT TRONG MÔ HÌNH PHÂN CẤP THAY ĐỔI MẶC ĐỊNH
 
 Để thay đổi nút giao điểm lên hoặc xuống  phía trong nhánh  parent làm thay đổi thứ tự mặc định sử dụng :
 
@@ -428,7 +428,7 @@ $bool = $node->down(3);
 
 Kết quả của hoạt động này là giá trị boolean của khi được thay đổi vị trí
 
-#### Hạn chế đi kèm khi dùng truy vấn builder
+#### TRUY VẤN QUERY ĐI KÈM HẠN CHẾ LẤY RA.
 
 những hạn chế khác nhau có thể được áp dụng cho truy vấn query builder:
 
@@ -457,7 +457,7 @@ $result = Category::whereAncestorOf($node)->get();
 
 `$node` có thể là một a primary key khóa chính sử dụng trong bảng làm việc thông qua Model
 
-#### Xây dựng một cây
+#### XÂY DỰNG MÔ HÌNH CÂY PHÂN CẤP TỪ DỮ LIỆU LẤY RA
 
 Sau khi nhận được một bộ sưu tập các giao điểm bạn có thể chuyển nó sang  cấu trúc dạng cây  ví dụ 
 
@@ -490,7 +490,7 @@ Kết quả khi output :
 - Another root
 ```
 
-##### Xây dựng cấu trúc một cây Phẳng
+##### XÂY DỰNG MỘT CÂY DỮ LIỆU PHẲNG THAY VÌ PHÂN CẤP
 
 Ngoài ra bạn có thể xây dựng một cấu trúc cây phẳng thay vì nặp các nút theo đệ qui.
 Điều này thực sự có ích khi bạn muốn sắp xếp cây cấu trúc theo thứ tự abc....mà được một danh sách các nút mà nút con là ngay lập tức
@@ -500,7 +500,7 @@ sau khi nút cha.
 $nodes = Category::get()->toFlatTree();
 ```
 
-##### Bắt một cấu trúc cây
+##### LẤY MỘT MÔ HÌNH PHÂN CẤP CỤ THỂ 
 
 Trong bảng dữ liệu của bạn có thể có nhiều cấu trúc cây, Đôi khi bạn không cần tải toàn bộ chúng bạn chỉ 
 cần một cây của một giao điểm cụ thể
@@ -520,7 +520,7 @@ Nếu bạn không cần cấu trúc cây của nút  `$root` đó  Bạn có th
 $tree = Category::descendantsOf($rootId)->toTree($rootId);
 ```
 
-### Xóa  một giao điểm trong cấu trúc 
+### XÓA NÚT GIAO ĐIỂM TRONG MÔ HÌNH
 
 Để xóa một giao điểm nút
 
@@ -541,7 +541,7 @@ Category::where('id', '=', $id)->delete();
 
 `SoftDeletes` đặc điểm được hỗ trợ
 
-### Phương thức hỗ trợ
+### PHƯƠNG PHÁP HỖ TRỢ
 
 Để kiểm tra nếu giao điểm hiện tại là con cháu của một giao điểm khác
 
@@ -597,7 +597,7 @@ với đặc tính riêng  `_lft` và  `_rgt` giá trị được thiết lập 
 Node::fixTree();
 ```
 
-### Phạm vi
+### PHẠM VI
 
 Hãy thử nghĩ bạn có một bảng  `Menu` với model và một  `MenuItems` bảng với model. tức là mỗi quan hệ một nhiều one-to-many 
 giữa 2 mô hình này. `MenuItem` có `menu_id` thuộc tình  sử dụng để nối 2 bảng qua model. `MenuItem` sử dụng bộ cấu trúc cây lồng nhau. Rõ ràng rằng bạn sẽ muốn 
@@ -642,7 +642,7 @@ $node = MenuItem::findOrFail($id); // OK
 $node = MenuItem::scoped([ 'menu_id' => 5 ])->findOrFail(); // OK, but redundant
 ```
 
-Requirements
+###YÊU CẦU
 ------------
 
 - PHP >= 5.4
@@ -660,7 +660,7 @@ To install the package, in terminal:
 composer require kalnoy/nestedset
 ```
 
-### Setting up from scratch
+### CÀI ĐẶT
 
 #### The schema
 
