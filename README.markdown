@@ -29,13 +29,10 @@ Cấu trúc cây lồng nhau là gì nested sets?
 Nested sets hoặc  [Nested Set Model](http://en.wikipedia.org/wiki/Nested_set_model) 
 một cách để lưu trữ hiệu quả phân cấp dữ liệu trong một bảng quan hệ. 
 
-> The nested set model is to number the nodes according to a tree traversal,
-> which visits each node twice, assigning numbers in the order of visiting, and
-> at both visits. This leaves two numbers for each node, which are stored as two
-> attributes. Querying becomes inexpensive: hierarchy membership can be tested by
-> comparing these numbers. Updating requires renumbering and is therefore expensive.
+![alt tag](https://scontent-hkg3-1.xx.fbcdn.net/v/t1.0-9/13686553_644095012411687_8366930733854424679_n.jpg?oh=dda5e2675817798aba2afc6ce43e615c&oe=585BA1FA)
 
-### Applications
+
+### Ứng dụng
 
 NSM cho thấy hiệu suất khi cây được update ít. Nó được tạo ra làm nhanh chóng có được các giao điểm nút liên quan. Nó phù hợp xây dựng cho menu  " building multi-depth menu " hoặc categories của shop. 
 
