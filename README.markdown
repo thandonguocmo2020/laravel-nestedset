@@ -658,6 +658,8 @@ $node = MenuItem::scoped([ 'menu_id' => 5 ])->findOrFail(); // OK, but redundant
 It is highly suggested to use database that supports transactions (like MySql's InnoDb) 
 to secure a tree from possible corruption.
 
+### CÀI ĐẶT 
+
 Installation
 ------------
 
@@ -666,8 +668,6 @@ To install the package, in terminal:
 ```
 composer require kalnoy/nestedset
 ```
-
-### CÀI ĐẶT
 
 #### The schema
 
