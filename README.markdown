@@ -13,11 +13,12 @@
 
 
 
-- [Lý thuyết](#Nested-Sets-CẤU-TRÚC-PHÂN-CẤP-DẠNG-CÂY-LÀ-GÌ)
-- [Yêu cầu](#YÊU-CẦU)
-- [Cài đặt](#CÀI-ĐĂT)
+- [Lý thuyết](#lý-thuyết)
+- [Yêu cầu](#yÊu-cẦu)
+- [Cài đặt](#cÀi-ĐẶt)
 - [Tài liệu ](#tài-liệu)
-    -   [THÊM NÚT ](#inserting-nodes)
+    -   [TẠO NÚT](#tẠo-nÚt) 
+    -   [THÊM NÚT ](#thÊm-nÚt)
     -   [LẤY NÚT ](#retrieving-nodes)
     -   [XÓA NÚT](#deleting-nodes)
     -   [TÌNH NHẤT QUÁN KIỂM TRA   & SỬA CHỮA](#checking-consistency)
@@ -52,7 +53,40 @@ Node giao điểm có mối quan hệ đẩy đủ chức năng với các funct
 -   Node has many `children` => nút giao điểm có nhiều giao điểm con
 -   Node has many `descendants` => giao điểm có nhiều giao điểm cháu
 
-### THÊM NÚT
+
+####  TẠO NÚT 
+
+Khi bạn chỉ đơn giản là tạo ra một nút giao điểm mới, nó sẽ được thêm vào cuối cây của cấu trúc:
+
+```php
+Category::create($attributes); // Saved as root
+```
+
+```php
+$node = new Category($attributes);
+$node->save(); // Saved as root
+```
+
+Trong các trường hợp này các nút là một nút giao điểm  _root_  cấp cao nhât không có giao điểm cha.
+
+
+
+#### Thay đổi một nút root giao điểm gốc từ nút hiện có 
+
+```php
+// #1 Implicit save
+$node->saveAsRoot();
+
+// #2 Explicit save
+$node->makeRoot()->save();
+```
+
+Các nút sẽ tạo ra cấu trúc cây mới được thêm vào cuối cây hiện tại cùng cấp các nút root đã có.
+
+
+#### THÊM NÚT
+
+Giao dịch tự động khi các nút được save() thêm mới.
 
 Di chuyển hay thêm mới một nút bao gồm truy vấn tới cơ sở dữ liệu. Thực thi được tự đông khi nào các nút giao điểm được lưu.  Nó là an toàn sử dụng thực thi toàn cầu. 
 
@@ -70,34 +104,7 @@ if ($node->save()) {
 }
 ```
 
-####  TẠO NÚT 
-
-Khi bạn chỉ đơn giản là tạo ra một nút giao điểm mới, nó sẽ được thêm vào cuối cây của cấu trúc:
-
-```php
-Category::create($attributes); // Saved as root
-```
-
-```php
-$node = new Category($attributes);
-$node->save(); // Saved as root
-```
-
-Trong các trường hợp này các nút là một nút giao điểm  _root_  cấp cao nhât không có giao điểm cha.
-
-#### Thay đổi một nút root giao điểm gốc từ nút hiện có 
-
-```php
-// #1 Implicit save
-$node->saveAsRoot();
-
-// #2 Explicit save
-$node->makeRoot()->save();
-```
-
-Các nút sẽ tạo ra cấu trúc cây mới được thêm vào cuối cây hiện tại cùng cấp các nút root đã có.
-
-#### NỐI THÊM VÀO CUỐI HOẶC THÊM VÀO TRƯỚC NHÁNH HIỆN CÓ
+#### NỐI VÀO CUỐI HOẶC THÊM VÀO TRƯỚC NHÁNH HIỆN CÓ TRONG CẤU TRÚC PHÂN CẤP
 
 Nếu bạn muốn làm cho nút hiện tại là giao điểm nút con của một nút khác. Bạn có thể cho nó là cuối cùng hoặc đầu tiên. "last or first child".
 
