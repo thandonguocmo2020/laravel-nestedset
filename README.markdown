@@ -43,7 +43,7 @@ Tài liệu
 -------------
 
 Giả sử chúng ta có một mô hình model `Category`; và một `$node` biến là một  một thể hiện của class mô hình model
-và các giao điểm mà chúng ta tương tác . Nó có thể là một mô hình mới hoặc một from database.  
+và các giao điểm mà chúng ta tương tác . Nó có thể là một mô hình mới hoặc một bảng từ database.  
 
 ### Mối quan hê trong cấu trúc cây 
 
