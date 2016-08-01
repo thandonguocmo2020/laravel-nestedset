@@ -13,20 +13,21 @@
 
 
 
-- [Lý thuyết](#what-are-nested-sets)
+- [Lý thuyết](#Nested-Sets-CẤU-TRÚC-PHÂN-CẤP-DẠNG-CÂY-LÀ-GÌ)
+- [Yêu cầu](#YÊU-CẦU)
+- [Cài đặt](#CÀI-ĐĂT)
 - [Tài liệu ](#documentation)
-    -   [Thêm mới giao điểm ](#inserting-nodes)
-    -   [lấy nút giao điểm ](#retrieving-nodes)
-    -   [xóa nút giao điểm](#deleting-nodes)
-    -   [Tính nhất quán kiểm tra  & sửa chữa](#checking-consistency)
-    -   [Phạm vi ](#scoping)
-- [Yêu cầu](#requirements)
-- [Cài đặt](#installation)
+    -   [THÊM NÚT ](#inserting-nodes)
+    -   [LẤY NÚT ](#retrieving-nodes)
+    -   [XÓA NÚT](#deleting-nodes)
+    -   [TÌNH NHẤT QUÁN KIỂM TRA   & SỬA CHỮA](#checking-consistency)
+    -   [PHẠM VI](#scoping)
 
-Cấu trúc cây lồng nhau là gì nested sets?
+### Lý thuyết
+### Nested Sets MÔ HÌNH LỒNG NHAU HAY CẤU TRÚC PHÂN CẤP DẠNG CÂY LÀ GÌ?
 ---------------------
 
-Nested sets hoặc  [Nested Set Model](http://en.wikipedia.org/wiki/Nested_set_model) 
+Nested sets hoặc  [MÔ HÌNH PHÂN CẤP](http://en.wikipedia.org/wiki/Nested_set_model) 
 một cách để lưu trữ hiệu quả phân cấp dữ liệu trong một bảng quan hệ. 
 
 ![alt tag](https://scontent-hkg3-1.xx.fbcdn.net/v/t1.0-9/13686553_644095012411687_8366930733854424679_n.jpg?oh=dda5e2675817798aba2afc6ce43e615c&oe=585BA1FA)
