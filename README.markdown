@@ -485,6 +485,38 @@ $traverse = function ($categories, $prefix = '-') use (&$traverse) {
 };
 
 $traverse($nodes);
+
+
+hoặc sắp xếp  ul
+
+        $categories =  Category::get()->toTree();
+        
+        $traverse = function ($categories, $prefix = '<li>', $suffix = '</li>') use (&$traverse) {
+        foreach ($categories as $category) {
+            echo $prefix.$category->name.$suffix;
+
+            $hasChildren = (count($category->children) > 0);
+
+            if($hasChildren) {
+                echo('<ul>');
+            }
+
+            $traverse($category->children);
+
+            if($hasChildren) {
+                echo('</ul>');
+               }
+           }
+       };
+
+        $traverse($categories);
+
+ 
+
+
+
+
+
 ```
 
 Kết quả khi output :
