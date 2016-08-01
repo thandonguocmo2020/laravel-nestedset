@@ -403,72 +403,70 @@ $result = Category::withDepth()->having('depth', '=', 1)->get();
 
 #### Mặc định sắp xếp
 
-Each node has it's own unique `_lft` value that determines its position in the tree. If
-you want node to be ordered by this value, you can use `defaultOrder` method on
-the query builder:
+Mỗi nút giao điểm có giá trị cột `_lft` là duy nhất để xác định vị trí của nó trong cây. Nếu bạn muốn nút giao điểm  được sắp xếp theo các giá trị này, bạn cần sử dụng `defaultOrder` phương pháp trong câu lệnh truy vấn query builder :
 
 ```php
-// All nodes will now be ordered by lft value
+// Muốn lấy tất cả các nút giao điểm theo giá trị sắp xếp cột lft 
 $result = Category::defaultOrder()->get();
 ```
 
-You can get nodes in reversed order:
+Bạn có thể nhận được các nút theo thứ tự đảo ngược lại :
 
 ```php
 $result = Category::reversed()->get();
 ```
 
-##### Shifting a node
+##### Chuyển một nút theo sắp xếp mặc định
 
-To shift node up or down inside parent to affect default order:
+Để thay đổi nút giao điểm lên hoặc xuống  phía trong nhánh  parent làm thay đổi thứ tự mặc định sử dụng :
 
 ```php
 $bool = $node->down();
 $bool = $node->up();
 
-// Shift node by 3 siblings
+// Di chuyển giao điểm xuống 3 đơn vị sắp xếp trong các giao điểm cùng cấp anh em.
 $bool = $node->down(3);
 ```
 
-The result of the operation is boolean value of whether the node has changed its
-position.
+Kết quả của hoạt động này là giá trị boolean của khi được thay đổi vị trí
 
-#### Constraints
+#### Hạn chế đi kèm khi dùng truy vấn builder
 
-Various constraints that can be applied to the query builder:
+những hạn chế khác nhau có thể được áp dụng cho truy vấn query builder:
 
--   __whereIsRoot()__ to get only root nodes;
--   __whereIsAfter($id)__ to get every node (not just siblings) that are after a node
-    with specified id;
--   __whereIsBefore($id)__ to get every node that is before a node with specified id.
+-   __whereIsRoot()__ chỉ lấy duy nhất nút giao điểm gốc Root;
+-   __whereIsAfter($id)__ Để có được tất cả các nút phía sau (Không chỉ là các nút đồng cấp anh em)  với 1 id giao điểm chỉ định
+-   __whereIsBefore($id)__ Để có được tất cả các nút phía trước của nút giao điểm với id chỉ định.
 
-Descendants constraints:
+Hạn chế  đối với con cháu :
 
 ```php
+// Lấy ra tất cả con cháu phía sau của nút
 $result = Category::whereDescendantOf($node)->get();
+// lấy ra tất cả không phải con cháu của nút 
 $result = Category::whereNotDescendantOf($node)->get();
+// Hoặc sử dụng 2 phương pháp tương ứng
 $result = Category::orWhereDescendantOf($node)->get();
 $result = Category::orWhereNotDescendantOf($node)->get();
 ```
 
-Ancestor constraints:
+Tổ tiên cây cấu trúc hạn chế constraints:
 
 ```php
+// lấy ra tất cả các nút tổ tiên của nút 
 $result = Category::whereAncestorOf($node)->get();
 ```
 
-`$node` can be either a primary key of the model or model instance.
+`$node` có thể là một a primary key khóa chính sử dụng trong bảng làm việc thông qua Model
 
-#### Building a tree
+#### Xây dựng một cây
 
-After getting a set of nodes, you can convert it to tree. For example:
+Sau khi nhận được một bộ sưu tập các giao điểm bạn có thể chuyển nó sang  cấu trúc dạng cây  ví dụ 
 
 ```php
 $tree = Category::get()->toTree();
 ```
-
-This will fill `parent` and `children` relationships on every node in the set and
-you can render a tree using recursive algorithm:
+Điều này sẽ điền các giao điểm cha `parent` và con  `children` có mối quan hệ trong các giao điểm được thiết lập và bạn cần render hiển thị cây bằng thuật toán đệ qui phương pháp :
 
 ```php
 $nodes = Category::get()->toTree();
@@ -484,7 +482,7 @@ $traverse = function ($categories, $prefix = '-') use (&$traverse) {
 $traverse($nodes);
 ```
 
-This will output something like this:
+Kết quả khi output :
 
 ```
 - Root
@@ -494,113 +492,119 @@ This will output something like this:
 - Another root
 ```
 
-##### Building flat tree
+##### Xây dựng cấu trúc một cây Phẳng
 
-Also, you can build a flat tree: a list of nodes where child nodes are immediately
-after parent node. This is helpful when you get nodes with custom order
-(i.e. alphabetically) and don't want to use recursion to iterate over your nodes.
+Ngoài ra bạn có thể xây dựng một cấu trúc cây phẳng thay vì nặp các nút theo đệ qui.
+Điều này thực sự có ích khi bạn muốn sắp xếp cây cấu trúc theo thứ tự abc....mà được một danh sách các nút mà nút con là ngay lập tức
+sau khi nút cha.
 
 ```php
 $nodes = Category::get()->toFlatTree();
 ```
 
-##### Getting a subtree
+##### Bắt một cấu trúc cây
 
-Sometimes you don't need whole tree to be loaded and just some subtree of specific node.
-It is show in following example:
+Trong bảng dữ liệu của bạn có thể có nhiều cấu trúc cây, Đôi khi bạn không cần tải toàn bộ chúng bạn chỉ 
+cần một cây của một giao điểm cụ thể
+
+Đây là một ví dụ để hiển thị.
 
 ```php
 $root = Category::find($rootId);
 $tree = $root->descendants->toTree($root);
 ```
 
-Now `$tree` contains children of `$root` node.
+Điều này `$tree` sẽ trả về cấu trúc cây là các giao điểm con cháu của giao điểm `$root`.
 
-If you don't need `$root` node itself, do following instead:
+Nếu bạn không cần cấu trúc cây của nút  `$root` đó  Bạn có thể phủ định nó để lấy ra các cây cấu trúc khác mà không phải là nó:
 
 ```php
 $tree = Category::descendantsOf($rootId)->toTree($rootId);
 ```
 
-### Deleting nodes
+### Xóa  một giao điểm trong cấu trúc 
 
-To delete a node:
+Để xóa một giao điểm nút
 
 ```php
 $node->delete();
 ```
 
-**IMPORTANT!** Any descendant that node has will also be deleted!
+**Lưu Ý!** bất kỳ các giao điểm con cháu cùng bị xóa
 
-**IMPORTANT!** Nodes are required to be deleted as models, **don't** try do delete them using a query like so:
+**IMPORTANT!** Các nút yêu cầu xóa phải được xóa như các model orm , **don't** không thực hiện xóa các giao điểm bằng các truy vấn tương tự như sau :
 
 ```php
 Category::where('id', '=', $id)->delete();
 ```
 
-This will break the tree!
 
-`SoftDeletes` trait is supported, also on model level.
+Điều này sẽ phá vỡ các cấu trúc của cây!
 
-### Helper methods
+`SoftDeletes` đặc điểm được hỗ trợ
 
-To check if node is a descendant of other node:
+### Phương thức hỗ trợ
+
+Để kiểm tra nếu giao điểm hiện tại là con cháu của một giao điểm khác
 
 ```php
 $bool = $node->isDescendantOf($parent);
 ```
 
-To check whether the node is a root:
+Để kiểm tra xem các giao điểm hiện tại có phải là nút Root :
 
 ```php
 $bool = $node->isRoot();
 ```
 
-Other checks:
+Kiểm tra khác :
+
+
+// nếu đúng là con của nút khác
 
 *   `$node->isChildOf($other);`
+*   // nếu đúng là tổ tiên của nút khác
 *   `$node->isAncestorOf($other);`
+*   // nếu đúng là anh em của nút khác
 *   `$node->isSiblingOf($other);`
 
-### Checking consistency
+### Kiểm Tra  Tính nhất quán của cấu trúc
 
-You can check whether a tree is broken (i.e. has some structural errors):
+Bạn có thể kiểm tra xem một cây bị phá vỡ cấu trúc của nó mà sinh lỗi cấu trúc
 
 ```php
 $bool = Category::isBroken();
 ```
 
-It is possible to get error statistics:
+Nó có thể cho phép hiển thị các lỗi 
 
 ```php
 $data = Category::countErrors();
 ```
 
-It will return an array with following keys:
+nó sẽ return ra một mảng các key sau kèm theo thông báo lỗi :
 
--   `oddness` -- the number of nodes that have wrong set of `lft` and `rgt` values
--   `duplicates` -- the number of nodes that have same `lft` or `rgt` values
--   `wrong_parent` -- the number of nodes that have invalid `parent_id` value that
-    doesn't correspond to `lft` and `rgt` values
--   `missing_parent` -- the number of nodes that have `parent_id` pointing to
-    node that doesn't exists
+-   `oddness` -- số giao điểm đã bị sai bộ thứ tự sắp xếp `lft` và `rgt` giá trị
+-   `duplicates` -- các số của giao điểm này đã có `lft` hoặc `rgt` giá trị trong cột
+-   `wrong_parent` -- các số của  thứ tự của giao điểm không hợp lệ trong `parent_id` giá trị 
+   không tương ứng với  `lft` và `rgt` giá trị cột
+-   `missing_parent` -- number đã có  `parent_id` chỉ đến một giao điểm không tồn tại
     
-#### Fixing tree
+#### Sửa lỗi cấu trúc cây 
 
-Since v3.1 tree can now be fixed. Using inheritance info from `parent_id` column, 
-proper `_lft` and `_rgt` values are set for every node.
+Kể từ khi cây v3.1 có thể được cố định. Sử dụng thông tin kế thừa từ `parent_id` cột, 
+với đặc tính riêng  `_lft` và  `_rgt` giá trị được thiết lập là một cặp của giao điểm .
 
 ```php
 Node::fixTree();
 ```
 
-### Scoping
+### Phạm vi
 
-Imagine you have `Menu` model and `MenuItems`. There is a one-to-many relationship
-set up between these models. `MenuItem` has `menu_id` attribute for joining models
-together. `MenuItem` incorporates nested sets. It is obvious that you would want to 
-process each tree separately based on `menu_id` attribute. In order to do so, you
-need to specify this attribute as scope attribute:
+Hãy thử nghĩ bạn có một bảng  `Menu` với model và một  `MenuItems` bảng với model. tức là mỗi quan hệ một nhiều one-to-many 
+giữa 2 mô hình này. `MenuItem` có `menu_id` thuộc tình  sử dụng để nối 2 bảng qua model. `MenuItem` sử dụng bộ cấu trúc cây lồng nhau. Rõ ràng rằng bạn sẽ muốn 
+xử lý từng cấu trúc dựa trên  `menu_id` thuộc tính. Để làm như vậy bạn cần xác định thuộc tính này như một phạm vi truy vấn sử dụng
+ở mọi nơi.
 
 ```php
 protected function getScopeAttributes()
@@ -609,8 +613,7 @@ protected function getScopeAttributes()
 }
 ```
 
-But now in order to execute some custom query, you need to provide attributes
-that are used for scoping:
+Ngay bây giờ để thực hiện một tùy chỉnh query  bạn cần cung cấp thuộc tính attributes được sử dụng của menu_id scoping:
 
 ```php
 MenuItem::scoped([ 'menu_id' => 5 ])->withDepth()->get(); // OK
