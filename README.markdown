@@ -19,10 +19,10 @@
 - [Tài liệu ](#tài-liệu)
     -   [TẠO NÚT](#tẠo-nÚt) 
     -   [THÊM NÚT ](#thÊm-nÚt)
-    -   [LẤY NÚT ](#retrieving-nodes)
-    -   [XÓA NÚT](#deleting-nodes)
-    -   [TÌNH NHẤT QUÁN KIỂM TRA   & SỬA CHỮA](#checking-consistency)
-    -   [PHẠM VI](#scoping)
+    -   [LẤY NÚT ](#lẤy-ra-nÚt-giao-ĐiỂm)
+    -   [XÓA NÚT](#xÓa-nÚt-giao-ĐiỂm-trong-mÔ-hÌnh)
+    -   [TÌNH NHẤT QUÁN KIỂM TRA   & SỬA CHỮA](#kiểm-tra--tính-nhất-quán-của-cấu-trúc)
+    -   [PHẠM VI](#phẠm-vi)
 
 ### Lý thuyết
 ### Nested Sets MÔ HÌNH LỒNG NHAU HAY CẤU TRÚC PHÂN CẤP DẠNG CÂY LÀ GÌ?
