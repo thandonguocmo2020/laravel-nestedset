@@ -28,7 +28,7 @@
 ### Nested Sets MÔ HÌNH LỒNG NHAU HAY CẤU TRÚC PHÂN CẤP DẠNG CÂY LÀ GÌ?
 ---------------------
 
-Nested sets hoặc  [MÔ HÌNH PHÂN CẤP](http://en.wikipedia.org/wiki/Nested_set_model) 
+Nested sets hoặc  [MÔ HÌNH PHÂN CẤP](http://blog.siliconstraits.vn/mo-hinh-tap-hop-long-nhau-trong-co-so-du-lieu-phan-cap/) 
 một cách để lưu trữ hiệu quả phân cấp dữ liệu trong một bảng quan hệ. 
 
 ![alt tag](https://scontent-hkg3-1.xx.fbcdn.net/v/t1.0-9/13686553_644095012411687_8366930733854424679_n.jpg?oh=dda5e2675817798aba2afc6ce43e615c&oe=585BA1FA)
