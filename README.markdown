@@ -495,27 +495,27 @@ hoặc sắp xếp  ul Từ function xử lý bạn có thể bắn ra nodes
 
 // sau đó hiển thị ở ngoài view bằng 
 <div id="jstree_demo_div">
-    <ul>
-        <?php
-        $traverse = function ($categories, $prefix = '<li>', $suffix = '</li>') use (&$traverse) {
-            foreach ($categories as $category) {
-                $hasChildren = (count($category->children) > 0);
-                // data gọi đến title
-                echo $prefix . ' ' . $category->title;
-                // data gọi đến title
-                if ($hasChildren) {
-                    echo('<ul>');
-                }
-                $traverse($category->children,$prefix = '<li id="'.$category->id.'">');
-                if ($hasChildren) {
-                    echo('</ul>');
-                }
-                echo $suffix;
-            }
-        };
-        $traverse($tree);
-        ?>
-    </ul>
+	<ul>
+	    <?php
+	    $traverse = function ($categories, $prefix = '', $suffix = '</li>') use (&$traverse) {
+		foreach ($categories as $category) {
+		    $hasChildren = (count($category->children) > 0);
+		    // data gọi đến title
+		    echo '<li id="'.$category->id.'">' . $category->title;
+		    // data gọi đến title
+		    if ($hasChildren) {
+			echo('<ul>');
+		    }
+		    $traverse($category->children,$prefix = '<li id="'.$category->id.'" parent="'.$category->parent_id.'">');
+		    if ($hasChildren) {
+			echo('</ul>');
+		    }
+		    echo $suffix;
+		}
+	    };
+	    $traverse($tree);
+	    ?>
+	</ul>
 </div>
 
 
