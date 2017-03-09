@@ -487,33 +487,40 @@ $traverse = function ($categories, $prefix = '-') use (&$traverse) {
 $traverse($nodes);
 
 
-hoặc sắp xếp  ul
+hoặc sắp xếp  ul Từ function xử lý bạn có thể bắn ra nodes
 
-        $categories =  Category::get()->toTree();
-        
+
+
+
+
+// sau đó hiển thị ở ngoài view bằng 
+<div id="jstree_demo_div">
+    <ul>
+        <?php
         $traverse = function ($categories, $prefix = '<li>', $suffix = '</li>') use (&$traverse) {
-        foreach ($categories as $category) {
-            echo $prefix.$category->name.$suffix;
-
-            $hasChildren = (count($category->children) > 0);
-
-            if($hasChildren) {
-                echo('<ul>');
+            foreach ($categories as $category) {
+                $hasChildren = (count($category->children) > 0);
+                // data gọi đến title
+                echo $prefix . ' ' . $category->title;
+                // data gọi đến title
+                if ($hasChildren) {
+                    echo('<ul>');
+                }
+                $traverse($category->children,$prefix = '<li id="'.$category->id.'">');
+                if ($hasChildren) {
+                    echo('</ul>');
+                }
+                echo $suffix;
             }
-
-            $traverse($category->children);
-
-            if($hasChildren) {
-                echo('</ul>');
-               }
-           }
-       };
-
-        $traverse($categories);
-
- 
+        };
+        $traverse($tree);
+        ?>
+    </ul>
+</div>
 
 
+// Có vài điểm chú ý trong đoạn trên  jstree_demo_div bạn có thể dùng cách load html của jstree để hiển thị
+// <li id="'.$category->id.'"> ==> giúp cho bạn có id của phần tử hiện tại hoặc bạn có thể truyền bất kỳ điều gì vào li thuộc tính
 
 
 
