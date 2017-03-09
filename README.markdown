@@ -489,8 +489,8 @@ $traverse($nodes);
 
 hoặc sắp xếp  ul Từ function xử lý bạn có thể bắn ra nodes
 
-
-
+ $nodes =  Category::get()->toTree();
+ return view('backend.pages.category',["tree"=>$nodes]);
 
 
 // sau đó hiển thị ở ngoài view bằng 
