@@ -255,35 +255,6 @@ $node = Category::create(
 
 
 ```
-Hoặc dàn hàng ngang
-
-
-```php
-$traverse = function ($categories, $prefix = '', $suffix = '') use (&$traverse) {
-    foreach ($categories as $category) {
-        $hasChildren = (count($category->children) > 0);
-        // data gọi đến title
-        if ($category->parent_id == null) {
-            echo ' <h3 class="tag_parent">' . $category->title . ' </h3>';
-        } else {
-            echo('<span class="h5">');
-            echo '<input type="checkbox" class="tag_checkbox" name="' . $category->field . '" id="' . $category->id . '" value="true"/> '
-                . $category->title;
-            echo('</span>');
-        }
-        // data gọi đến child
-        if ($hasChildren) {
-            echo('<div class="tag_child">');
-        }
-        $traverse($category->children, $prefix = ' <div   id="' . $category->id . '" parent="' . $category->parent_id . '">');
-        if ($hasChildren) {
-            echo('</div>');
-        }
-        echo $suffix;
-    }
-};
-$traverse($tags);
-```
 `$node->children` bây giờ chứa một danh sách các nút giao điểm con child đươc tạo ra.
 
 #### XÂY DỰNG LẠI MỘT CÂY PHÂN CẤP TỪ MẢNG
@@ -563,6 +534,48 @@ Kết quả khi output :
 -- Child 2
 - Another root
 ```
+
+
+Hoặc dàn hàng ngang
+
+
+```php
+$traverse = function ($categories, $prefix = '', $suffix = '') use (&$traverse) {
+    foreach ($categories as $category) {
+        $hasChildren = (count($category->children) > 0);
+        // data gọi đến title
+        if ($category->parent_id == null) {
+            echo ' <h3 class="tag_parent">' . $category->title . ' </h3>';
+        } else {
+            echo('<span class="h5">');
+            echo '<input type="checkbox" class="tag_checkbox" name="' . $category->field . '" id="' . $category->id . '" value="true"/> '
+                . $category->title;
+            echo('</span>');
+        }
+        // data gọi đến child
+        if ($hasChildren) {
+            echo('<div class="tag_child">');
+        }
+        $traverse($category->children, $prefix = ' <div   id="' . $category->id . '" parent="' . $category->parent_id . '">');
+        if ($hasChildren) {
+            echo('</div>');
+        }
+        echo $suffix;
+    }
+};
+$traverse($tags);
+```
+
+`` Kết quả khi hiển thị output 
+
+-- root 1
+
+- Sub child 1 - sub child 2 - sub child 3...
+
+-- root 2
+
+- Sub child 1 - sub child 2 - sub child 3...
+
 
 ##### XÂY DỰNG MỘT CÂY DỮ LIỆU PHẲNG THAY VÌ PHÂN CẤP
 
